@@ -110,7 +110,8 @@ def get_ids(header_info=''):
     # some responsiveness in the "UI"
     sys.stdout.write('.')
     sys.stdout.flush()
-    works = soup.find_all(class_="work blurb group")
+    #works = soup.find_all(class_="work blurb group")
+    works = soup.select("li.work.blurb.group")
 
     # see if we've gone too far and run out of fic: 
     if (len(works) is 0):
@@ -238,6 +239,7 @@ def process_for_ids(header_info=''):
         # 5 second delay between requests as per AO3's terms of service
         time.sleep(5)
         ids = get_ids(header_info)
+        print (ids)
         write_ids_to_csv(ids)
         update_url_to_next_page()
 
@@ -246,7 +248,7 @@ def main():
     make_readme()
 
     print ("processing...\n")
-
+    print ('1!!', tags)
     if (len(tags)):
         for t in tags:
             print ("Getting tag: ", t)

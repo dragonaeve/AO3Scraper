@@ -85,19 +85,37 @@ def get_tags(meta):
 	return list(map(lambda tag: get_tag_info(tag, meta), tags))
 
 # get kudos
-def get_kudos(meta):	
-	users = []
+def get_all_kudos(url, header_info):
+	headers = {'user-agent' : header_info}
+	all_kudos = []
 
-	## hunt for kudos' contents
-	kudos = meta.contents
+	req = requests.get(url, headers=headers)
+	src = req.text
+	soup = BeautifulSoup(src, 'html.parser')
 
-	# extract user names
-	for kudo in kudos:
-		if kudo.name == 'a':
-			if 'more users' not in kudo.contents[0] and '(collapse)' not in kudo.contents[0]:
-				users.append(kudo.contents[0])
-	
-	return users
+	# find all pages
+	if (soup.find('ol', class_='pagination actions')):
+		pages = soup.find('ol', class_='pagination actions').findChildren("li" , recursive=False)
+		max_pages = int(pages[-2].contents[0].contents[0])
+		count = 1
+
+		while count <= max_pages:
+			# extract each bookmark per user
+			tags = soup.find("p", class_="kudos")
+			all_kudos += get_users(tags, 'kudo')
+
+			# next page
+			count+=1
+			req = requests.get(url+'?page='+str(count), headers=headers)
+			src = req.text
+			soup = BeautifulSoup(src, 'html.parser')
+	else:
+		tags = soup.find("p", class_="kudos")
+		all_kudos += get_users(tags, 'kudo')
+
+	print ('Kudos', len(all_kudos))
+
+	return []
 
 # get author(s)
 def get_authors(meta):
@@ -127,8 +145,8 @@ def get_bookmarks(url, header_info):
 
 		while count <= max_pages:
 			# extract each bookmark per user
-			tags = soup.findAll('h5', class_='byline heading')
-			bookmarks += get_users(tags)
+			tags = soup.findAll('li', class_='user short blurb group')
+			bookmarks += get_users(tags, 'bookmark')
 
 			# next page
 			count+=1
@@ -137,16 +155,40 @@ def get_bookmarks(url, header_info):
 			soup = BeautifulSoup(src, 'html.parser')
 	else:
 		tags = soup.findAll('h5', class_='byline heading')
-		bookmarks += get_users(tags)
+		bookmarks += get_users(tags, 'bookmark')
 
+	print ('Bookmarks', len(bookmarks))
 	return bookmarks
 
-# get users form bookmarks	
-def get_users (meta):
+# get users from bookmarks/kudos
+def get_users (meta, kind):
 	users = []
-	for tag in meta:
-			user = tag.findChildren("a" , recursive=False)[0].contents[0]
-			users.append(user)
+
+	if meta != None:
+		for tag in meta:
+				if type(tag).__name__ == 'Tag':
+					if kind == 'kudo':
+						user = tag.contents[0]
+					elif kind == 'bookmark':
+						username = tag.find('h5', class_='byline heading').findChildren('a')[0].contents[0]
+						datetime = tag.findChildren('p', class_='datetime')[0].contents[0]
+
+						bookmarkTags = tag.findAll('a', class_='tag')
+						bookmarkTags = [item.contents[0] for item in bookmarkTags]
+
+						collections = tag.find('ul', class_='meta commas')
+						if collections != None:
+							collections = [item.contents[0] for item in collections.findAll('a')]
+						
+						summary = tag.find('blockquote', class_='userstuff summary')
+						if summary != None: 
+							summary = summary.findAll('p')
+							summary = [item.contents[0] for item in summary]
+							
+						user = { 'username': username, 'date': datetime, 'tags': bookmarkTags, \
+							'collections': collections, 'summary': summary}
+
+					users.append(user)
 
 	return users
 	
@@ -173,6 +215,8 @@ def write_fic_to_csv(fic_id, only_first_chap, writer, errorwriter, header_info='
 	req = requests.get(url, headers=headers)
 	src = req.text
 	soup = BeautifulSoup(src, 'html.parser')
+
+	print (url)
 	if (access_denied(soup)):
 		print('Access Denied')
 		error_row = [fic_id] + ['Access Denied']
@@ -183,19 +227,20 @@ def write_fic_to_csv(fic_id, only_first_chap, writer, errorwriter, header_info='
 		tags = get_tags(meta)
 		stats = get_stats(meta)
 		title = unidecode(soup.find("h2", class_="title heading").string).strip()
-		visible_kudos = get_kudos(soup.find('p', class_='kudos'))
-		hidden_kudos = get_kudos(soup.find('span', class_='kudos_expanded hidden'))
-		full_kudos = visible_kudos + hidden_kudos
+
+		# get kudos
+		# kudos_url = 'http://archiveofourown.org' + soup.find(id='kudos_more_link')['href']
+		# all_kudos = get_all_kudos(kudos_url, header_info)
 		
 		#get bookmarks
 		bookmark_url = 'http://archiveofourown.org/works/'+str(fic_id)+'/bookmarks'
-		full_bookmarks = get_bookmarks(bookmark_url, header_info)
+		all_bookmarks = get_bookmarks(bookmark_url, header_info)
 
 		#get the fic itself
 		content = soup.find("div", id= "chapters")
 		chapters = content.select('p')
 		chaptertext = '\n\n'.join([unidecode(chapter.text) for chapter in chapters])
-		row = [fic_id] + [title] + [author] + list(map(lambda x: ', '.join(x), tags)) + stats + [chaptertext] + [full_kudos] + [full_bookmarks]
+		row = [fic_id] + [title] + [author] + list(map(lambda x: ', '.join(x), tags)) + stats + [chaptertext] + [all_kudos] + [all_bookmarks]
 
 		try:
 			writer.writerow(row)
@@ -236,7 +281,6 @@ def get_args():
 	return fic_ids, csv_out, headers, restart, is_csv, ofc
 
 '''
-
 '''
 def process_id(fic_id, restart, found):
 	if found:
@@ -257,7 +301,7 @@ def main():
 			#does the csv already exist? if not, let's write a header row.
 			if os.stat(csv_out).st_size == 0:
 				print('Writing a header row for the csv.')
-				header = ['work_id', 'title', 'author', 'rating', 'category', 'fandom', 'relationship', 'character', 'additional tags', 'language', 'published', 'status', 'status date', 'words', 'chapters', 'comments', 'kudos', 'bookmarks', 'hits', 'body', 'full_kudos', 'full_bookmarks']
+				header = ['work_id', 'title', 'author', 'rating', 'category', 'fandom', 'relationship', 'character', 'additional tags', 'language', 'published', 'status', 'status date', 'words', 'chapters', 'comments', 'kudos', 'bookmarks', 'hits', 'body', 'all_kudos', 'all_bookmarks']
 				writer.writerow(header)
 			if is_csv:
 				csv_fname = fic_ids[0]
