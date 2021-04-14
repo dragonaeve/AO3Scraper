@@ -113,8 +113,6 @@ def get_all_kudos(url, header_info):
 		tags = soup.find("p", class_="kudos")
 		all_kudos += get_users(tags, 'kudo')
 
-	print ('Kudos', len(all_kudos))
-
 	return []
 
 # get author(s)
@@ -157,7 +155,6 @@ def get_bookmarks(url, header_info):
 		tags = soup.findAll('h5', class_='byline heading')
 		bookmarks += get_users(tags, 'bookmark')
 
-	print ('Bookmarks', len(bookmarks))
 	return bookmarks
 
 # get users from bookmarks/kudos
@@ -184,13 +181,129 @@ def get_users (meta, kind):
 						if summary != None: 
 							summary = summary.findAll('p')
 							summary = [item.contents[0] for item in summary]
-							
+
 						user = { 'username': username, 'date': datetime, 'tags': bookmarkTags, \
 							'collections': collections, 'summary': summary}
 
 					users.append(user)
 
 	return users
+
+def get_single_comment(comment, parent):
+	datetimeLabels = ['weekday', 'day', 'month', 'year', 'time', 'timezone']
+	header = comment.find('h4', class_='heading byline').contents
+	username = header[0].strip()
+
+	datetime = comment.find('h4', class_='heading byline').find('span', class_="posted datetime").contents[1:-1]
+	datetime = [var for var in datetime if var not in ['\n', ' ']]
+	datetimeDict = {}
+
+	for r, row in enumerate(datetime):
+		label = datetimeLabels[r]
+		datetimeDict[label] = row.contents[0]
+
+	# get comment id
+	try:
+		commentid = comment['id'].split('_')[1]
+	except:
+		commentid = None
+
+	text = comment.find('blockquote', class_ ='userstuff').find('p').contents[0]
+	commentData = {'replies': [], 'user': username, 'datetime': datetimeDict, 'id': commentid, 'parent': parent, 'text': text}
+
+	return commentData
+
+def get_comments(url, header_info):
+	all_comments = []
+	headers = {'user-agent' : header_info}
+
+	req = requests.get(url, headers=headers)
+	src = req.text
+	soup = BeautifulSoup(src, 'html.parser')
+
+	# find all pages
+	if (soup.find('ol', class_='pagination actions')):
+		pages = soup.find('ol', class_='pagination actions').findChildren("li" , recursive=False)
+		max_pages = int(pages[-2].contents[0].contents[0])
+		count = 1
+
+		while count <= max_pages:
+			comments = soup.find('ol', class_ = 'thread').findChildren("li" , recursive=False)
+
+			# comments processing
+			for c, comment in enumerate(comments):
+				if 'class' in comment.attrs:
+					if 'odd' in comment.attrs['class']:
+						commentData = get_single_comment(comment, True)
+						print(commentData, '\n')
+						all_comments.append(commentData)
+						activeComment = len(all_comments) - 1
+				else:
+					commentData = get_single_comment(comment, False)
+					all_comments[activeComment]['replies'].append(commentData)
+					print(all_comments[activeComment])
+					print()
+			# next page
+			count+=1
+			req = requests.get(url+'?page='+str(count), headers=headers)
+			src = req.text
+			soup = BeautifulSoup(src, 'html.parser')
+
+# 		var thread = [
+#   {
+#     listid: 1,
+#     commentid: 1,
+#     metadata: "user? other stuff?",
+#     isauthor: false,
+#     comment: "Did you xyz? So good!",
+#     reply:
+#     {
+#       commentid: 2,
+#       metadata: "what metadata you need idk",
+#       isauthor: true,
+#       comment: "Yes! I abc!",
+#       reply:
+#       {
+#         commentid: 3,
+#         metadata: "asdf",
+#         isauthor: false,
+#         comment: "OMG so cool!",
+#         image: "idk how to do this personally",
+#         reply:
+#         {
+#           commentid: 4,
+#           metadata: "bla",
+#           isauthor: true,
+#           comment: "haha thank you!"
+#         }
+#       }
+#     }
+#   },
+#   {
+#     listid: 123,
+#     commentid: 123,
+#     metadata: "user? other stuff?",
+#     isauthor: false,
+#     comment: "I love this!",
+#     reply:
+#     {
+#       commentid: 456,
+#       metadata: "what metadata you need idk",
+#       isauthor: true,
+#       comment: "thank you so much!"
+#     }
+#   },
+#   {
+#     id: 789,
+#     metadata: "stuff",
+#     isauthor: false,
+#     comment: ";aifja;wlefj;awiefjowj"
+#   }
+# ];
+
+		return all_comments
+
+
 	
 def access_denied(soup):
 	if (soup.find(class_="flash error")):
@@ -233,14 +346,18 @@ def write_fic_to_csv(fic_id, only_first_chap, writer, errorwriter, header_info='
 		# all_kudos = get_all_kudos(kudos_url, header_info)
 		
 		#get bookmarks
-		bookmark_url = 'http://archiveofourown.org/works/'+str(fic_id)+'/bookmarks'
-		all_bookmarks = get_bookmarks(bookmark_url, header_info)
+		# bookmark_url = 'http://archiveofourown.org/works/'+str(fic_id)+'/bookmarks'
+		# all_bookmarks = get_bookmarks(bookmark_url, header_info)
+
+		# get comments
+		comments_url  = 'http://archiveofourown.org/works/' + str(fic_id) + '?show_comments=true#comments'
+		all_comments = get_comments(comments_url, header_info)
 
 		#get the fic itself
 		content = soup.find("div", id= "chapters")
 		chapters = content.select('p')
 		chaptertext = '\n\n'.join([unidecode(chapter.text) for chapter in chapters])
-		row = [fic_id] + [title] + [author] + list(map(lambda x: ', '.join(x), tags)) + stats + [chaptertext] + [all_kudos] + [all_bookmarks]
+		row = [fic_id] + [title] + [author] + list(map(lambda x: ', '.join(x), tags)) + stats# + [chaptertext] + [all_kudos] + [all_bookmarks]
 
 		try:
 			writer.writerow(row)
