@@ -213,6 +213,25 @@ def get_single_comment(comment, parent):
 
 	return commentData
 
+## Understand level of nesting and how to return the comment
+## Once at last deepest level, start returning the comments
+def get_nested_comment(parent, comment):
+	try:
+		search = comment.find('ol', class_ = 'thread').find_all("li" , recursive=False)
+		print(search)
+		parent['replies'] = get_nested_comment(search)
+	except:
+		print(comment)
+		return get_single_comment(comment, False)
+
+	print(parent)
+	return parent
+	# print ('\n\n!!!', search)
+	# if len(search) > 0:
+	# 	return get_nested_comment(search)
+	# else:
+	# 	return get_single_comment(comment, False)
+
 def get_comments(url, header_info):
 	all_comments = []
 	headers = {'user-agent' : header_info}
@@ -229,20 +248,25 @@ def get_comments(url, header_info):
 
 		while count <= max_pages:
 			comments = soup.find('ol', class_ = 'thread').findChildren("li" , recursive=False)
-
+			
 			# comments processing
 			for c, comment in enumerate(comments):
 				if 'class' in comment.attrs:
-					if 'odd' in comment.attrs['class']:
+					if 'odd' in comment.attrs['class'] or 'even' in comment.attrs['class']:
 						commentData = get_single_comment(comment, True)
-						print(commentData, '\n')
 						all_comments.append(commentData)
-						activeComment = len(all_comments) - 1
+						#activeComment = len(all_comments) - 1
 				else:
-					commentData = get_single_comment(comment, False)
-					all_comments[activeComment]['replies'].append(commentData)
-					print(all_comments[activeComment])
+					print('\nThread')
+					commentData = get_nested_comment(all_comments[-1], comment)
+					print(commentData)
+					#commentData = get_single_comment(comment, False)
+					all_comments[-1]['replies'].append(commentData)
+					# print(all_comments[activeComment])
+					# print(all_comments[-1]['replies'])
 					print()
+				print(len(all_comments))
+
 			# next page
 			count+=1
 			req = requests.get(url+'?page='+str(count), headers=headers)
