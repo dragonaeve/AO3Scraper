@@ -192,7 +192,10 @@ def get_users (meta, kind):
 def get_single_comment(comment, parent):
 	datetimeLabels = ['weekday', 'day', 'month', 'year', 'time', 'timezone']
 	header = comment.find('h4', class_='heading byline').contents
-	username = header[0].strip()
+	if header[0] == '\n':
+		username = header[1].get_text()
+	else:
+		username = header[0].strip()
 
 	datetime = comment.find('h4', class_='heading byline').find('span', class_="posted datetime").contents[1:-1]
 	datetime = [var for var in datetime if var not in ['\n', ' ']]
@@ -217,7 +220,7 @@ def get_single_comment(comment, parent):
 ## Once at last deepest level, start returning the comments
 def get_nested_comment(parent, comment):
 	try:
-		search = comment.find('ol', class_ = 'thread').find_all("li" , recursive=False)
+		search = comment.find('ol', class_='thread').find_all("li" , recursive=False)
 		print(search)
 		parent['replies'] = get_nested_comment(search)
 	except:
@@ -324,7 +327,10 @@ def get_comments(url, header_info):
 #     comment: ";aifja;wlefj;awiefjowj"
 #   }
 # ];
-
+		txt = "comments.txt"
+		with open(txt, 'w') as f:
+			for item in all_comments:
+				f.write('%s\n' % item)
 		return all_comments
 
 
