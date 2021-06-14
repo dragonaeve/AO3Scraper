@@ -30,7 +30,7 @@ echo Starting Search...
 $PY $AOE_SCRAPE_WORK_ID \
   "$URL" \
   --out_csv work_ids \
-  --num_to_retrieve 50
+  --num_to_retrieve 1
 
 CMD="$PY $AOE_SCRAPE_GET_FANFIC $IDS \
   --csv $FICS"
@@ -45,7 +45,7 @@ else
   #set var of length of work_ids
   LENWORK=$(wc -l < $IDS)
   #set var of length of fics csv w/o header
-  LENFICS=$(($(wc -l < $FICS) - 3))
+  LENFICS=$(($(wc -l < $FICS) - 1))
 
   #while last id in fanfics.csv < last id in work_ids
   while [ $LENFICS -lt "$LENWORK" ]
@@ -64,13 +64,13 @@ else
     fi
     #update last uncollected id
     OLDLEN=$LENFICS
-    LENFICS=$(($(wc -l < $FICS) - 3))
+    LENFICS=$(($(wc -l < $FICS) - 1))
     if [ $OLDLEN -eq $LENFICS ]
     then
       #if retry fails, write the id to fanfics.csv
       echo "skipping ${RESTART}"
       echo "${RESTART},,,,,,,,,,,,,,,,,,,,," >> $FICS
-      LENFICS=$(($(wc -l < $FICS) - 3))
+      LENFICS=$(($(wc -l < $FICS) - 1))
     fi
   done
 fi
