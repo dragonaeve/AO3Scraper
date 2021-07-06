@@ -221,9 +221,10 @@ def get_single_comment(comment, parent):
 
 	for i, item in enumerate(text):
 		if i < len(text) - 1:
-			fullText += item + '\n'
+			fullText += str(item) + '\n'
 		else:
-			fullText += item
+			print(item)
+			fullText += str(item)
 
 	# Create object and return
 	commentData = {'user': username, 'datetime': dateObj, 'id': commentid, 'parent': parent, 'text': fullText}
@@ -301,29 +302,29 @@ def get_comments(url, header_info):
 
 		# comments processing
 		for c, comment in enumerate(comments):
-			try:
-				if comment.attrs['class']:
-					if 'odd' in comment.attrs['class'] or 'even' in comment.attrs['class']:
-						single_comment = get_single_comment(comment, True)
-						all_comments.append(single_comment)
-						last_count+=1
+			#try:
+			if comment.attrs['class']:
+				if 'odd' in comment.attrs['class'] or 'even' in comment.attrs['class']:
+					single_comment = get_single_comment(comment, True)
+					all_comments.append(single_comment)
+					last_count+=1
 
 			# likely a comment thread
-			except:
-				if comment.findChild('ol', class_="thread"):
-					if len(all_comments) > 0:
-						new_comments = get_comment_thread(comment.findChildren('ol'), True)
+			# except:
+			# 	if comment.findChild('ol', class_="thread"):
+			# 		if len(all_comments) > 0:
+			# 			new_comments = get_comment_thread(comment.findChildren('ol'), True)
 						
-						# If it's a bunch of replies, store as reply to previous comment
-						if len(all_comments) == last_count:
-							all_comments[-1]['reply'] = new_comments
-							last_count+=1 # To move the index along so that you don't erase the comments
-						else:
-							all_comments.append(new_comments)
-					else:
-						new_comments = get_comment_thread(comment.findChildren('ol'), True)
-						all_comments.append(new_comments)
-						last_count +=1
+			# 			# If it's a bunch of replies, store as reply to previous comment
+			# 			if len(all_comments) == last_count:
+			# 				all_comments[-1]['reply'] = new_comments
+			# 				last_count+=1 # To move the index along so that you don't erase the comments
+			# 			else:
+			# 				all_comments.append(new_comments)
+			# 		else:
+			# 			new_comments = get_comment_thread(comment.findChildren('ol'), True)
+			# 			all_comments.append(new_comments)
+			# 			last_count +=1
 
 	return all_comments
 	
@@ -364,10 +365,13 @@ def write_fic_to_csv(fic_id, only_first_chap, writer, errorwriter, header_info='
 		title = unidecode(soup.find("h2", class_="title heading").string).strip()
 
 		#get kudos
-		kudos_url = 'http://archiveofourown.org' + soup.find(id='kudos_more_link')['href']
-		print ('+++', kudos_url)
+		kudos_newpage = soup.find(id='kudos_more_link')
+		if kudos_newpage != None:
+			kudos_url = 'http://archiveofourown.org' + soup.find(id='kudos_more_link')['href']
+		else:
+			kudos_url = url
 		all_kudos = get_all_kudos(kudos_url, header_info)
-		
+
 		#get bookmarks
 		bookmark_url = 'http://archiveofourown.org/works/'+str(fic_id)+'/bookmarks'
 		all_bookmarks = get_bookmarks(bookmark_url, header_info)
