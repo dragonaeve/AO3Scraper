@@ -377,7 +377,7 @@ def write_fic_to_csv(fic_id, only_first_chap, writer, errorwriter, header_info='
 		all_bookmarks = get_bookmarks(bookmark_url, header_info)
 
 		# get comments
-		comments_url  = 'http://archiveofourown.org/works/' + str(fic_id) + '?show_comments=true#comments'
+		comments_url  = url + '&amp;show_comments=true#comments'
 		all_comments = get_comments(comments_url, header_info)
 
 		#get the fic itself
