@@ -1,0 +1,367 @@
++ PY=D:/Anna/AO3Scraper/venv/Scripts/python.exe
++ AOE_SCRAPE_WORK_ID=D:/Anna/AO3Scraper/ao3_work_ids.py
++ AOE_SCRAPE_GET_FANFIC=D:/Anna/AO3Scraper/ao3_get_fanfics.py
++ WORKSPACE=D:/Anna/AO3ScraperW/
++ FICS=fanfics.csv
++ IDS=work_ids.csv
++ URL='https://archiveofourown.org/works?utf8=%E2%9C%93&work_search%5Bsort_column%5D=revised_at&work_search%5Bother_tag_names%5D=&work_search%5Bexcluded_tag_names%5D=&work_search%5Bcrossover%5D=F&work_search%5Bcomplete%5D=&work_search%5Bwords_from%5D=&work_search%5Bwords_to%5D=&work_search%5Bdate_from%5D=2018-01-01&work_search%5Bdate_to%5D=2019-12-31&work_search%5Bquery%5D=&work_search%5Blanguage_id%5D=en&commit=Sort+and+Filter&tag_id=Yuri%21%21%21+on+Ice+%28Anime%29'
++ echo Cleaning up...
+Cleaning up...
++ rm -rf D:/Anna/AO3ScraperW/
++ mkdir D:/Anna/AO3ScraperW/
++ cd D:/Anna/AO3ScraperW/
++ echo Starting Search...
+Starting Search...
++ D:/Anna/AO3Scraper/venv/Scripts/python.exe D:/Anna/AO3Scraper/ao3_work_ids.py 'https://archiveofourown.org/works?utf8=%E2%9C%93&work_search%5Bsort_column%5D=revised_at&work_search%5Bother_tag_names%5D=&work_search%5Bexcluded_tag_names%5D=&work_search%5Bcrossover%5D=F&work_search%5Bcomplete%5D=&work_search%5Bwords_from%5D=&work_search%5Bwords_to%5D=&work_search%5Bdate_from%5D=2018-01-01&work_search%5Bdate_to%5D=2019-12-31&work_search%5Bquery%5D=&work_search%5Blanguage_id%5D=en&commit=Sort+and+Filter&tag_id=Yuri%21%21%21+on+Ice+%28Anime%29' --out_csv work_ids --num_to_retrieve 10
+processing...
+
+!!! []
+.That's all, folks.
++ CMD='D:/Anna/AO3Scraper/venv/Scripts/python.exe D:/Anna/AO3Scraper/ao3_get_fanfics.py work_ids.csv   --csv fanfics.csv'
++ echo Pulling Fanfics...
+Pulling Fanfics...
++ eval 'D:/Anna/AO3Scraper/venv/Scripts/python.exe D:/Anna/AO3Scraper/ao3_get_fanfics.py work_ids.csv   --csv fanfics.csv'
+++ D:/Anna/AO3Scraper/venv/Scripts/python.exe D:/Anna/AO3Scraper/ao3_get_fanfics.py work_ids.csv --csv fanfics.csv
+Writing a header row for the csv.
+Scraping  22057636
+http://archiveofourown.org/works/22057636?view_adult=true&amp;view_full_work=true
+I like your fanfic otajj
+Traceback (most recent call last):
+  File "D:\Anna\AO3Scraper\ao3_get_fanfics.py", line 478, in <module>
+    main()
+  File "D:\Anna\AO3Scraper\ao3_get_fanfics.py", line 459, in main
+    write_fic_to_csv(row[0], only_first_chap, writer, errorwriter, headers)
+  File "D:\Anna\AO3Scraper\ao3_get_fanfics.py", line 381, in write_fic_to_csv
+    all_comments = get_comments(comments_url, header_info)
+  File "D:\Anna\AO3Scraper\ao3_get_fanfics.py", line 306, in get_comments
+    if comment.attrs['class']:
+KeyError: 'class'
++ echo 'Exit code 1, failure'
+Exit code 1, failure
+++ wc -l
++ LENWORK=10
+++ wc -l
++ LENFICS=0
++ '[' 0 -lt 10 ']'
++ NEXTID=1
+++ sed '1q;d' work_ids.csv
+++ awk -F, '{print $1}'
++ RESTART=22057636
++ RES='D:/Anna/AO3Scraper/venv/Scripts/python.exe D:/Anna/AO3Scraper/ao3_get_fanfics.py work_ids.csv   --csv fanfics.csv     --restart 22057636'
++ echo 'Going to restart at 22057636'
+Going to restart at 22057636
++ sleep 5
++ eval 'D:/Anna/AO3Scraper/venv/Scripts/python.exe D:/Anna/AO3Scraper/ao3_get_fanfics.py work_ids.csv   --csv fanfics.csv     --restart 22057636'
+++ D:/Anna/AO3Scraper/venv/Scripts/python.exe D:/Anna/AO3Scraper/ao3_get_fanfics.py work_ids.csv --csv fanfics.csv --restart 22057636
+Scraping  22057636
+http://archiveofourown.org/works/22057636?view_adult=true&amp;view_full_work=true
+I like your fanfic otajj
+Traceback (most recent call last):
+  File "D:\Anna\AO3Scraper\ao3_get_fanfics.py", line 478, in <module>
+    main()
+  File "D:\Anna\AO3Scraper\ao3_get_fanfics.py", line 468, in main
+    write_fic_to_csv(row[0], only_first_chap, writer, errorwriter, headers)
+  File "D:\Anna\AO3Scraper\ao3_get_fanfics.py", line 381, in write_fic_to_csv
+    all_comments = get_comments(comments_url, header_info)
+  File "D:\Anna\AO3Scraper\ao3_get_fanfics.py", line 306, in get_comments
+    if comment.attrs['class']:
+KeyError: 'class'
++ OLDLEN=0
+++ wc -l
++ LENFICS=0
++ '[' 0 -eq 0 ']'
++ echo 'skipping 22057636'
+skipping 22057636
++ echo 22057636,,,,,,,,,,,,,,,,,,,,,
+++ wc -l
++ LENFICS=1
++ '[' 1 -lt 10 ']'
++ NEXTID=2
+++ sed '2q;d' work_ids.csv
+++ awk -F, '{print $1}'
++ RESTART=22057144
++ RES='D:/Anna/AO3Scraper/venv/Scripts/python.exe D:/Anna/AO3Scraper/ao3_get_fanfics.py work_ids.csv   --csv fanfics.csv     --restart 22057144'
++ echo 'Going to restart at 22057144'
+Going to restart at 22057144
++ sleep 5
++ eval 'D:/Anna/AO3Scraper/venv/Scripts/python.exe D:/Anna/AO3Scraper/ao3_get_fanfics.py work_ids.csv   --csv fanfics.csv     --restart 22057144'
+++ D:/Anna/AO3Scraper/venv/Scripts/python.exe D:/Anna/AO3Scraper/ao3_get_fanfics.py work_ids.csv --csv fanfics.csv --restart 22057144
+Skipping already processed fic
+Scraping  22057144
+http://archiveofourown.org/works/22057144?view_adult=true&amp;view_full_work=true
+count 1
+count 2
+Thank you for adding more content! Love the video reveal!
+Traceback (most recent call last):
+  File "D:\Anna\AO3Scraper\ao3_get_fanfics.py", line 478, in <module>
+    main()
+  File "D:\Anna\AO3Scraper\ao3_get_fanfics.py", line 468, in main
+    write_fic_to_csv(row[0], only_first_chap, writer, errorwriter, headers)
+  File "D:\Anna\AO3Scraper\ao3_get_fanfics.py", line 381, in write_fic_to_csv
+    all_comments = get_comments(comments_url, header_info)
+  File "D:\Anna\AO3Scraper\ao3_get_fanfics.py", line 306, in get_comments
+    if comment.attrs['class']:
+KeyError: 'class'
++ OLDLEN=1
+++ wc -l
++ LENFICS=1
++ '[' 1 -eq 1 ']'
++ echo 'skipping 22057144'
+skipping 22057144
++ echo 22057144,,,,,,,,,,,,,,,,,,,,,
+++ wc -l
++ LENFICS=2
++ '[' 2 -lt 10 ']'
++ NEXTID=3
+++ sed '3q;d' work_ids.csv
+++ awk -F, '{print $1}'
++ RESTART=22052422
++ RES='D:/Anna/AO3Scraper/venv/Scripts/python.exe D:/Anna/AO3Scraper/ao3_get_fanfics.py work_ids.csv   --csv fanfics.csv     --restart 22052422'
++ echo 'Going to restart at 22052422'
+Going to restart at 22052422
++ sleep 5
++ eval 'D:/Anna/AO3Scraper/venv/Scripts/python.exe D:/Anna/AO3Scraper/ao3_get_fanfics.py work_ids.csv   --csv fanfics.csv     --restart 22052422'
+++ D:/Anna/AO3Scraper/venv/Scripts/python.exe D:/Anna/AO3Scraper/ao3_get_fanfics.py work_ids.csv --csv fanfics.csv --restart 22052422
+Skipping already processed fic
+Skipping already processed fic
+Scraping  22052422
+http://archiveofourown.org/works/22052422?view_adult=true&amp;view_full_work=true
+Oh I'm loving this already. That was funny and adorable.
+Awwww. How sweet???? So cute.
+OMG Victorrrrrrr you can't just ask people to take a shower with you!
+Yuri is so jealous. It's adorable. So cute.
+I wish I could give you more kudos. Love the friendship between those two.
+Traceback (most recent call last):
+  File "D:\Anna\AO3Scraper\ao3_get_fanfics.py", line 283, in get_comments
+    if comment.attrs['class']:
+KeyError: 'class'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\Anna\AO3Scraper\ao3_get_fanfics.py", line 478, in <module>
+    main()
+  File "D:\Anna\AO3Scraper\ao3_get_fanfics.py", line 468, in main
+    write_fic_to_csv(row[0], only_first_chap, writer, errorwriter, headers)
+  File "D:\Anna\AO3Scraper\ao3_get_fanfics.py", line 381, in write_fic_to_csv
+    all_comments = get_comments(comments_url, header_info)
+  File "D:\Anna\AO3Scraper\ao3_get_fanfics.py", line 291, in get_comments
+    all_comments.append(get_comment_thread(comment.findChildren('ol'), True, all_comments))
+TypeError: get_comment_thread() takes 2 positional arguments but 3 were given
++ OLDLEN=2
+++ wc -l
++ LENFICS=2
++ '[' 2 -eq 2 ']'
++ echo 'skipping 22052422'
+skipping 22052422
++ echo 22052422,,,,,,,,,,,,,,,,,,,,,
+++ wc -l
++ LENFICS=3
++ '[' 3 -lt 10 ']'
++ NEXTID=4
+++ sed '4q;d' work_ids.csv
+++ awk -F, '{print $1}'
++ RESTART=22056754
++ RES='D:/Anna/AO3Scraper/venv/Scripts/python.exe D:/Anna/AO3Scraper/ao3_get_fanfics.py work_ids.csv   --csv fanfics.csv     --restart 22056754'
++ echo 'Going to restart at 22056754'
+Going to restart at 22056754
++ sleep 5
++ eval 'D:/Anna/AO3Scraper/venv/Scripts/python.exe D:/Anna/AO3Scraper/ao3_get_fanfics.py work_ids.csv   --csv fanfics.csv     --restart 22056754'
+++ D:/Anna/AO3Scraper/venv/Scripts/python.exe D:/Anna/AO3Scraper/ao3_get_fanfics.py work_ids.csv --csv fanfics.csv --restart 22056754
+Skipping already processed fic
+Skipping already processed fic
+Skipping already processed fic
+Scraping  22056754
+http://archiveofourown.org/works/22056754?view_adult=true&amp;view_full_work=true
+count 1
+count 2
+count 3
+count 4
+Trying to kill me with this angst Jesus that was amazing thank God for fanfiction .
+Traceback (most recent call last):
+  File "D:\Anna\AO3Scraper\ao3_get_fanfics.py", line 478, in <module>
+    main()
+  File "D:\Anna\AO3Scraper\ao3_get_fanfics.py", line 468, in main
+    write_fic_to_csv(row[0], only_first_chap, writer, errorwriter, headers)
+  File "D:\Anna\AO3Scraper\ao3_get_fanfics.py", line 381, in write_fic_to_csv
+    all_comments = get_comments(comments_url, header_info)
+  File "D:\Anna\AO3Scraper\ao3_get_fanfics.py", line 306, in get_comments
+    if comment.attrs['class']:
+KeyError: 'class'
++ OLDLEN=3
+++ wc -l
++ LENFICS=3
++ '[' 3 -eq 3 ']'
++ echo 'skipping 22056754'
+skipping 22056754
++ echo 22056754,,,,,,,,,,,,,,,,,,,,,
+++ wc -l
++ LENFICS=4
++ '[' 4 -lt 10 ']'
++ NEXTID=5
+++ sed '5q;d' work_ids.csv
+++ awk -F, '{print $1}'
++ RESTART=22056589
++ RES='D:/Anna/AO3Scraper/venv/Scripts/python.exe D:/Anna/AO3Scraper/ao3_get_fanfics.py work_ids.csv   --csv fanfics.csv     --restart 22056589'
++ echo 'Going to restart at 22056589'
+Going to restart at 22056589
++ sleep 5
++ eval 'D:/Anna/AO3Scraper/venv/Scripts/python.exe D:/Anna/AO3Scraper/ao3_get_fanfics.py work_ids.csv   --csv fanfics.csv     --restart 22056589'
+++ D:/Anna/AO3Scraper/venv/Scripts/python.exe D:/Anna/AO3Scraper/ao3_get_fanfics.py work_ids.csv --csv fanfics.csv --restart 22056589
+Skipping already processed fic
+Skipping already processed fic
+Skipping already processed fic
+Skipping already processed fic
+Scraping  22056589
+http://archiveofourown.org/works/22056589?view_adult=true&amp;view_full_work=true
+count 1
+count 2
+count 3
+count 4
+count 5
+count 6
+SUCH  a good chapter, I was buzzing to read this one, so fantastic, you always do such a wonderful job exploring the different facets of their relationship and I just love it. Thank you!
+Traceback (most recent call last):
+  File "D:\Anna\AO3Scraper\ao3_get_fanfics.py", line 283, in get_comments
+    if comment.attrs['class']:
+KeyError: 'class'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\Anna\AO3Scraper\ao3_get_fanfics.py", line 478, in <module>
+    main()
+  File "D:\Anna\AO3Scraper\ao3_get_fanfics.py", line 468, in main
+    write_fic_to_csv(row[0], only_first_chap, writer, errorwriter, headers)
+  File "D:\Anna\AO3Scraper\ao3_get_fanfics.py", line 381, in write_fic_to_csv
+    all_comments = get_comments(comments_url, header_info)
+  File "D:\Anna\AO3Scraper\ao3_get_fanfics.py", line 291, in get_comments
+    all_comments.append(get_comment_thread(comment.findChildren('ol'), True, all_comments))
+TypeError: get_comment_thread() takes 2 positional arguments but 3 were given
++ OLDLEN=4
+++ wc -l
++ LENFICS=4
++ '[' 4 -eq 4 ']'
++ echo 'skipping 22056589'
+skipping 22056589
++ echo 22056589,,,,,,,,,,,,,,,,,,,,,
+++ wc -l
++ LENFICS=5
++ '[' 5 -lt 10 ']'
++ NEXTID=6
+++ sed '6q;d' work_ids.csv
+++ awk -F, '{print $1}'
++ RESTART=22056532
++ RES='D:/Anna/AO3Scraper/venv/Scripts/python.exe D:/Anna/AO3Scraper/ao3_get_fanfics.py work_ids.csv   --csv fanfics.csv     --restart 22056532'
++ echo 'Going to restart at 22056532'
+Going to restart at 22056532
++ sleep 5
++ eval 'D:/Anna/AO3Scraper/venv/Scripts/python.exe D:/Anna/AO3Scraper/ao3_get_fanfics.py work_ids.csv   --csv fanfics.csv     --restart 22056532'
+++ D:/Anna/AO3Scraper/venv/Scripts/python.exe D:/Anna/AO3Scraper/ao3_get_fanfics.py work_ids.csv --csv fanfics.csv --restart 22056532
+Skipping already processed fic
+Skipping already processed fic
+Skipping already processed fic
+Skipping already processed fic
+Skipping already processed fic
+Scraping  22056532
+http://archiveofourown.org/works/22056532?view_adult=true&amp;view_full_work=true
+count 1
+count 2
+I don't usually read Phichumetti just cuz I'm a Victurri person but that was some goooooooood stuff lol
+Traceback (most recent call last):
+  File "D:\Anna\AO3Scraper\ao3_get_fanfics.py", line 478, in <module>
+    main()
+  File "D:\Anna\AO3Scraper\ao3_get_fanfics.py", line 468, in main
+    write_fic_to_csv(row[0], only_first_chap, writer, errorwriter, headers)
+  File "D:\Anna\AO3Scraper\ao3_get_fanfics.py", line 381, in write_fic_to_csv
+    all_comments = get_comments(comments_url, header_info)
+  File "D:\Anna\AO3Scraper\ao3_get_fanfics.py", line 306, in get_comments
+    if comment.attrs['class']:
+KeyError: 'class'
++ OLDLEN=5
+++ wc -l
++ LENFICS=5
++ '[' 5 -eq 5 ']'
++ echo 'skipping 22056532'
+skipping 22056532
++ echo 22056532,,,,,,,,,,,,,,,,,,,,,
+++ wc -l
++ LENFICS=6
++ '[' 6 -lt 10 ']'
++ NEXTID=7
+++ sed '7q;d' work_ids.csv
+++ awk -F, '{print $1}'
++ RESTART=22050238
++ RES='D:/Anna/AO3Scraper/venv/Scripts/python.exe D:/Anna/AO3Scraper/ao3_get_fanfics.py work_ids.csv   --csv fanfics.csv     --restart 22050238'
++ echo 'Going to restart at 22050238'
+Going to restart at 22050238
++ sleep 5
++ eval 'D:/Anna/AO3Scraper/venv/Scripts/python.exe D:/Anna/AO3Scraper/ao3_get_fanfics.py work_ids.csv   --csv fanfics.csv     --restart 22050238'
+++ D:/Anna/AO3Scraper/venv/Scripts/python.exe D:/Anna/AO3Scraper/ao3_get_fanfics.py work_ids.csv --csv fanfics.csv --restart 22050238
+Skipping already processed fic
+Skipping already processed fic
+Skipping already processed fic
+Skipping already processed fic
+Skipping already processed fic
+Skipping already processed fic
+Scraping  22050238
+http://archiveofourown.org/works/22050238?view_adult=true&amp;view_full_work=true
+Traceback (most recent call last):
+  File "D:\Anna\AO3Scraper\ao3_get_fanfics.py", line 478, in <module>
+    main()
+  File "D:\Anna\AO3Scraper\ao3_get_fanfics.py", line 468, in main
+    write_fic_to_csv(row[0], only_first_chap, writer, errorwriter, headers)
+  File "D:\Anna\AO3Scraper\ao3_get_fanfics.py", line 381, in write_fic_to_csv
+    all_comments = get_comments(comments_url, header_info)
+  File "D:\Anna\AO3Scraper\ao3_get_fanfics.py", line 308, in get_comments
+    single_comment = get_single_comment(comment, True)
+  File "D:\Anna\AO3Scraper\ao3_get_fanfics.py", line 226, in get_single_comment
+    print(item)
+  File "C:\Users\Anna\AppData\Local\Programs\Python\Python39\lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+UnicodeEncodeError: 'charmap' codec can't encode characters in position 163-165: character maps to <undefined>
++ OLDLEN=6
+++ wc -l
++ LENFICS=6
++ '[' 6 -eq 6 ']'
++ echo 'skipping 22050238'
+skipping 22050238
++ echo 22050238,,,,,,,,,,,,,,,,,,,,,
+++ wc -l
++ LENFICS=7
++ '[' 7 -lt 10 ']'
++ NEXTID=8
+++ sed '8q;d' work_ids.csv
+++ awk -F, '{print $1}'
++ RESTART=22053451
++ RES='D:/Anna/AO3Scraper/venv/Scripts/python.exe D:/Anna/AO3Scraper/ao3_get_fanfics.py work_ids.csv   --csv fanfics.csv     --restart 22053451'
++ echo 'Going to restart at 22053451'
+Going to restart at 22053451
++ sleep 5
++ eval 'D:/Anna/AO3Scraper/venv/Scripts/python.exe D:/Anna/AO3Scraper/ao3_get_fanfics.py work_ids.csv   --csv fanfics.csv     --restart 22053451'
+++ D:/Anna/AO3Scraper/venv/Scripts/python.exe D:/Anna/AO3Scraper/ao3_get_fanfics.py work_ids.csv --csv fanfics.csv --restart 22053451
+Skipping already processed fic
+Skipping already processed fic
+Skipping already processed fic
+Skipping already processed fic
+Skipping already processed fic
+Skipping already processed fic
+Skipping already processed fic
+Scraping  22053451
+http://archiveofourown.org/works/22053451?view_adult=true&amp;view_full_work=true
+Thank you for sharing!! it was really good!!
+I love that short, sudden scene change at the end!!! YES GET IT YUURI
+Done.
+Scraping  22053379
+http://archiveofourown.org/works/22053379?view_adult=true&amp;view_full_work=true
+But aww, that ending. :")
+Done.
+Scraping  22053295
+http://archiveofourown.org/works/22053295?view_adult=true&amp;view_full_work=true
+<i>At first, he tries to out-dance Victor, but it doesn’t take long before he falls into the habit of dancing with Victor and their battle turns into a pas de deux.</i>
+Done.
++ echo 'Exit code 0, success'
+Exit code 0, success
++ break
++ echo 'Done!'
+Done!
