@@ -223,7 +223,7 @@ def get_single_comment(comment, parent):
 		if i < len(text) - 1:
 			fullText += str(item) + '\n'
 		else:
-			print(item)
+
 			fullText += str(item)
 
 	# Create object and return
@@ -302,29 +302,29 @@ def get_comments(url, header_info):
 
 		# comments processing
 		for c, comment in enumerate(comments):
-			#try:
-			if comment.attrs['class']:
-				if 'odd' in comment.attrs['class'] or 'even' in comment.attrs['class']:
-					single_comment = get_single_comment(comment, True)
-					all_comments.append(single_comment)
-					last_count+=1
+			try:
+				if comment.attrs['class']:
+					if 'odd' in comment.attrs['class'] or 'even' in comment.attrs['class']:
+						single_comment = get_single_comment(comment, True)
+						all_comments.append(single_comment)
+						last_count+=1
 
 			# likely a comment thread
-			# except:
-			# 	if comment.findChild('ol', class_="thread"):
-			# 		if len(all_comments) > 0:
-			# 			new_comments = get_comment_thread(comment.findChildren('ol'), True)
+			except:
+				if comment.findChild('ol', class_="thread"):
+					if len(all_comments) > 0:
+						new_comments = get_comment_thread(comment.findChildren('ol'), True)
 						
-			# 			# If it's a bunch of replies, store as reply to previous comment
-			# 			if len(all_comments) == last_count:
-			# 				all_comments[-1]['reply'] = new_comments
-			# 				last_count+=1 # To move the index along so that you don't erase the comments
-			# 			else:
-			# 				all_comments.append(new_comments)
-			# 		else:
-			# 			new_comments = get_comment_thread(comment.findChildren('ol'), True)
-			# 			all_comments.append(new_comments)
-			# 			last_count +=1
+						# If it's a bunch of replies, store as reply to previous comment
+						if len(all_comments) == last_count:
+							all_comments[-1]['reply'] = new_comments
+							last_count+=1 # To move the index along so that you don't erase the comments
+						else:
+							all_comments.append(new_comments)
+					else:
+						new_comments = get_comment_thread(comment.findChildren('ol'), True)
+						all_comments.append(new_comments)
+						last_count +=1
 
 	return all_comments
 	
