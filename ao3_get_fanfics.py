@@ -53,20 +53,20 @@ def get_tag_info(category, meta):
 		tag_list = meta.find("dd", class_=str(category) + ' tags').find_all(class_="tag")
 	except AttributeError as e:
 		return []
-	return [unidecode(result.text) for result in tag_list] 
-	
+	return [unidecode(result.text) for result in tag_list]
+
 def get_stats(meta):
 	'''
 	returns a list of  
 	language, published, status, date status, words, chapters, comments, kudos, bookmarks, hits
 	'''
-	categories = ['language', 'published', 'status', 'words', 'chapters', 'comments', 'kudos', 'bookmarks', 'hits'] 
+	categories = ['language', 'published', 'status', 'words', 'chapters', 'comments', 'kudos', 'bookmarks', 'hits']
 
 	stats = list(map(lambda category: meta.find("dd", class_=category), categories))
 
 	if not stats[2]:
 		stats[2] = stats[1] #no explicit completed field -- one shot
-	try:		
+	try:
 		stats = [unidecode(stat.text) for stat in stats]
 	except AttributeError as e: #for some reason, AO3 sometimes miss stat tags (like hits)
 		new_stats = []
@@ -78,11 +78,11 @@ def get_stats(meta):
 	stats[0] = stats[0].rstrip().lstrip() #language has weird whitespace characters
 	#add a custom completed/updated field
 	status  = meta.find("dt", class_="status")
-	if not status: status = 'Completed' 
+	if not status: status = 'Completed'
 	else: status = status.text.strip(':')
 	stats.insert(2, status)
 
-	return stats      
+	return stats
 
 def get_tags(meta):
 	'''
@@ -122,7 +122,7 @@ def get_all_kudos(url, header_info):
 		# single page of kudos
 		tags = soup.find("p", class_="kudos")
 		all_kudos += get_users(tags, 'kudo')
-		
+
 	return all_kudos
 
 # get author(s)
@@ -314,7 +314,7 @@ def get_comments(url, header_info):
 			req = requests.get(url+'?page='+str(count), headers=headers)
 			src = req.text
 			soup = BeautifulSoup(src, 'html.parser')
-			
+
 	else:
 		comments = soup.find('ol', class_ = 'thread').findChildren("li" , recursive=False)
 		last_count = 0
@@ -333,7 +333,7 @@ def get_comments(url, header_info):
 				if comment.findChild('ol', class_="thread"):
 					if len(all_comments) > 0:
 						new_comments = get_comment_thread(comment.findChildren('ol'), True)
-						
+
 						# If it's a bunch of replies, store as reply to previous comment
 						if len(all_comments) == last_count:
 							all_comments[-1]['reply'] = new_comments
@@ -341,12 +341,12 @@ def get_comments(url, header_info):
 						else:
 							all_comments.append(new_comments)
 					else:
-						new_comments = get_comment_thread(comment.findChildren('ol'), True)
+						new_comments = get_comment_thread(comment.findChildren('ol'), True, all_comments)
 						all_comments.append(new_comments)
 						last_count +=1
 
 	return all_comments
-	
+
 def access_denied(soup):
 	if (soup.find(class_="flash error")):
 		return True
@@ -417,7 +417,7 @@ def write_fic_to_csv(fic_id, only_first_chap, lang, include_bookmarks, writer, e
 			errorwriter.writerow(error_row)
 		print('Done.')
 
-def get_args(): 
+def get_args():
 	parser = argparse.ArgumentParser(description='Scrape and save some fanfic, given their AO3 IDs.')
 	parser.add_argument(
 		'ids', metavar='IDS', nargs='+',
@@ -429,10 +429,10 @@ def get_args():
 		'--header', default='',
 		help='user http header')
 	parser.add_argument(
-		'--restart', default='', 
+		'--restart', default='',
 		help='work_id to start at from within a csv')
 	parser.add_argument(
-		'--firstchap', default='', 
+		'--firstchap', default='',
 		help='only retrieve first chapter of multichapter fics')
 	parser.add_argument(
 		'--lang', default='',
@@ -442,7 +442,7 @@ def get_args():
 		help='retrieve bookmarks; ')
 	args = parser.parse_args()
 	fic_ids = args.ids
-	is_csv = (len(fic_ids) == 1 and '.csv' in fic_ids[0]) 
+	is_csv = (len(fic_ids) == 1 and '.csv' in fic_ids[0])
 	csv_out = str(args.csv)
 	headers = str(args.header)
 	restart = str(args.restart)
@@ -493,7 +493,7 @@ def main():
 							write_fic_to_csv(row[0], only_first_chap, lang, include_bookmarks, writer, errorwriter,
 											 headers)
 							time.sleep(delay)
-					else: 
+					else:
 						found_restart = False
 						for row in reader:
 							if not row:
