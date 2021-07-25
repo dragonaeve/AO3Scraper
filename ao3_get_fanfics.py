@@ -407,7 +407,7 @@ def write_fic_to_csv(fic_id, only_first_chap, lang, include_bookmarks, writer, e
 		chaptertext = '\n\n'.join([unidecode(chapter.text) for chapter in chapters])
 
 		row = [fic_id] + [title] + [author] + list(map(lambda x: ', '.join(x), tags)) + stats + [all_kudos] + [
-			all_bookmarks] + [all_comments] + [chaptertext]
+			all_bookmarks] + [all_comments] + [[chaptertext]]
 
 		try:
 			writer.writerow(row)
