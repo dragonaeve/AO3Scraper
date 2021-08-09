@@ -103,8 +103,15 @@ def get_args():
 # 
 def get_ids(header_info=''):
     global page_empty
-    headers = {'user-agent' : header_info}
-    req = requests.get(url, headers=headers)
+    headers = {'user-agent': header_info}
+    status = 429
+    while 429 == status:
+        req = requests.get(url, headers=headers)
+        status = req.status_code
+        if 429 == status:
+            print("Request answered with Status-Code "+str(status))
+            print("Trying again in 1 minutes...")
+            time.sleep(60)
     soup = BeautifulSoup(req.text, "lxml")
 
     # some responsiveness in the "UI"

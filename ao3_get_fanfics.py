@@ -42,7 +42,7 @@ import sys
 from unidecode import unidecode
 
 # seconds to wait between page requests
-delay = 5
+delay = 15
 
 
 def get_tag_info(category, meta):
@@ -108,7 +108,7 @@ def get_all_kudos(url, header_info):
 		count = 1
 
 		while count <= max_pages:
-			print ('count', count)
+			# print ('count', count)
 			# extract each bookmark per user
 			tags = soup.find("p", class_="kudos")
 			all_kudos += get_users(tags, 'kudo')
@@ -368,7 +368,23 @@ def write_fic_to_csv(fic_id, only_first_chap, lang, include_bookmarks, writer, e
 	if not only_first_chap:
 		url = url + '&amp;view_full_work=true'
 	headers = {'user-agent' : header_info}
-	req = requests.get(url, headers=headers)
+	status = 429
+	while 429 == status:
+		req = requests.get(url, headers=headers)
+		status = req.status_code
+		if 429 == status:
+			error_row = [fic_id] + ["Status: 429"]
+			errorwriter.writerow(error_row)
+			print("Request answered with Status-Code 429")
+			print("Trying again in 1 minute...")
+			time.sleep(60)
+
+	if 400 <= status:
+		print("Error scraping ", fic_id, "Status ", str(status))
+		error_row = [fic_id] + [status]
+		errorwriter.writerow(error_row)
+		return
+
 	src = req.text
 	soup = BeautifulSoup(src, 'html.parser')
 
@@ -398,7 +414,7 @@ def write_fic_to_csv(fic_id, only_first_chap, lang, include_bookmarks, writer, e
 
 		# get comments
 		comments_url = url + '&amp;show_comments=true#comments'
-		print(comments_url)
+		# print(comments_url)
 		all_comments = get_comments(comments_url, header_info)
 
 		#get the fic itself
